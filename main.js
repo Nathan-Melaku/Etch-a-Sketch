@@ -37,22 +37,41 @@ function addHoverListner() {
     const squares = Array.from(squaresQuery);
 
     squares.forEach((div) => {
+        
+        
+        let darkness = 0.1;
 
         div.addEventListener('mouseover', event => {
-            event.target.style.backgroundColor = `rgb(${generateRandom()},
-                                                ${generateRandom()},${generateRandom()})`;
-        });
-
-        div.addEventListener('mouseout', event => {
-            event.target.style.backgroundColor = `rgb(${generateRandom()},
-                                                ${generateRandom()},${generateRandom()})`;
+            
+            event.target.style.backgroundColor = ColorLuminance('#FFFFFF', (0 - darkness));
+            if (darkness <= 0.9) {
+                darkness += 0.1;
+            }
         });
         
     });
 }
 
-const generateRandom = () => {
-    return Math.floor(Math.random() * 256);
+/*  Funtion recieves rgb and luminuesity and returns rgb value of the color with lum**/
+/*  copied from sitepoint.com/javascript-generate-lighter-darker-color/ */
+function ColorLuminance(hex, lum) {
+
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
 }
 
 const removeChildren = (parent) => {
